@@ -8,40 +8,56 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { SignInValidation } from "@/lib/validations/user.validation"
-import * as z from "zod"
 import { Link } from "react-router-dom"
+import * as z from "zod"
+import { loginUserAccount } from "@/lib/appwrite/api"
 
 const LogInForm = () => {
+
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof SignInValidation>>({
     resolver: zodResolver(SignInValidation),
     defaultValues: {
-      name: "",
+      email: "",
       password: "",
     },
   })
  
-  function onSubmit(values: z.infer<typeof SignInValidation>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof SignInValidation>) {
+      const user = await loginUserAccount({
+        email: values.email,
+        password: values.password,
+      });
+
+      if (!user) 
+        return toast({ title: "Failed to login !", 
+                description: "Creditentials might be wrong.", 
+                className: "border-none bg-red-800 text-white"});
+        
+      return toast({ title: "Logged In !", 
+                  description: "Successfully connected to the account!", 
+                  className: "border-none bg-green-800 text-white"});
   }
 
   return (
     <div className="flex flex-col justify-center px-10 items-center w-full h-full py-60">
-      <h1 className="text-white text-5xl font-bold mt-10 max-md:mt-15">Log in</h1>
+      <h1 className="text-white text-5xl font-bold mt-10 max-md:mt-15">Log In</h1>
       <p className="text-white mt-3 font-sans font-semibold">Connect to your account</p>
 
       <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full h-full space-y-8 flex flex-col">
         <FormField
           control={form.control}
-          name="name"
+          name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Name</FormLabel>
+              <FormLabel className="text-white">Email</FormLabel>
               <FormControl>
                 <Input className="text-white bg-opacity-5 backdrop-blur-sm bg-white border-2 border-white border-opacity-20" placeholder="enter your name here." {...field} />
               </FormControl>

@@ -1,0 +1,15 @@
+export const Permissions = {
+    VIEW_ROOMS: 1 << 1,
+    SEND_MESSAGES: 1 << 2,
+    VIEW_MESSAGES: 1 << 3,
+    SEND_DOCUMENTS: 1 << 4,
+    VIEW_DOCUMENTS: 1 << 5,
+    CREATE_INVITE: 1 << 6,
+    KICK_USERS: 1 << 7,
+    BAN_USERS: 1 << 8,
+    DELETE_MESSAGES: 1 << 9,
+    DELETE_DOCUMENTS: 1 << 10,
+    DELETE_ROOMS: 1 << 11,
+    CREATE_ROOMS: 1 << 12,
+    ALL: 1 << 20,
+}
